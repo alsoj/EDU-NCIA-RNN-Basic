@@ -3,8 +3,9 @@ import tensorflow as tf
 import numpy as np
 from sklearn import preprocessing
 
-
+##################
 # 전처리 직접 구현
+##################
 def make_onehot_1(word):
     # unique함을 보장하기 위해 list가 아닌 set을 사용
     idx2char = sorted(set(word))
@@ -34,7 +35,9 @@ def make_onehot_1(word):
 
     return x_onehot, y, np.array(idx2char)
 
+###################
 # 쉬운 방법으로 구현
+###################
 def make_onehot_2(word):
     #list로 바꿔주는 코드가 꼭 필요하다
     data = list(word)
@@ -61,31 +64,8 @@ def make_onehot_2(word):
 def rnn_3(word, n_iterations=100):
     # x, y, vocab = make_onehot_1(word)
     x, y, vocab = make_onehot_2(word)
-    # return
-
-    # vocab = np.array(['e','n','o','r','s','t'])
-    # x는 3차원
-    # x = [[[0, 0, 0, 0, 0, 1],    # t
-    #       [1, 0, 0, 0, 0, 0],    # e
-    #       [0, 1, 0, 0, 0, 0],    # n
-    #       [0, 0, 0, 0, 1, 0],    # s
-    #       [0, 0, 1, 0, 0, 0]]]   # o
-
-    # y = [[1, 0, 0, 0, 0, 0],    # e
-    #      [0, 1, 0, 0, 0, 0],    # n
-    #      [0, 0, 0, 0, 1, 0],    # s
-    #      [0, 0, 1, 0, 0, 0],    # o
-    #      [0, 0, 0, 1, 0, 0]]    # r
-
-    # y = [[0, 1, 4, 2, 3]]           # ensor
 
     x = np.float32(x)   # Data Type이 맞지 않을 때 최우선 타입은 float32
-
-
-    # 수업시간에는 BasicRNNCell을 사용하지만
-    # 실제로 구현할 때는 GRUCell, LSTMCell 등을 써서 성능을 최적화할 것
-    # 내부로직을 알아야 할 필요가 있는가?
-    # 알면 판단 시에 도움은 될 수 있으나, 가성비가 많이 떨어진다(직접 두 개 다 해보는게 빠름)
 
     # 앞 쪽 레이어
     hidden_size = 7
@@ -128,7 +108,7 @@ def rnn_3(word, n_iterations=100):
         sess.run(train)
 
         preds = sess.run(z)
-        preds_arg = np.argmax(preds, axis=2) # 여기도 수정!!
+        preds_arg = np.argmax(preds, axis=2) # axis 변경
         # preds = preds[0]
         # preds_arg = np.argmax(preds, axis=1)
 
