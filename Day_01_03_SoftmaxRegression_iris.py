@@ -2,10 +2,11 @@
 import tensorflow as tf
 import numpy as np
 from sklearn import model_selection, datasets
-
-
 # scipy, scikit-learn, sklearn
 
+#####################
+# Iris classification
+#####################
 def get_iris_1():
     iris = np.loadtxt('Data/iris.csv',
                       skiprows=1,
