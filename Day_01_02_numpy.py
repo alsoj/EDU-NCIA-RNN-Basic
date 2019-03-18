@@ -1,6 +1,10 @@
 # Day_01_02_numpy.py
 import numpy as np
 
+############################
+# Numpy & Functions Practice
+############################
+
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))     # exp 같은 함수를 universal function이라 한다
 
@@ -52,7 +56,9 @@ print(onehot)
 
 print(np.argmax(preds) == np.argmax(onehot))
 
-# 단순 인코딩 된 것을 onehot encoding 하는 방법!!!
+##############################################
+# 단순 인코딩 된 것을 onehot encoding 하는 방법
+##############################################
 encode = [0, 0, 1, 1, 2, 2]
 onehot = np.eye(3, dtype=np.int32)
 print(onehot)
@@ -63,6 +69,9 @@ print('-' * 50)
 
 import tensorflow as tf
 
+##############################################
+# Matrix Multiplication Practice
+##############################################
 def show_tf_matmul(s1, s2):
     # np.prod 함수는 내부를 다 곱함
     m1 = np.prod(s1)
@@ -93,3 +102,12 @@ print(e)
 print(np.argmax(e, axis=0)) # (?, 3, 4) ?를 안 쓰겠다는 것 => 3 x 4 = 12   # 페이지 중 큰 값
 print(np.argmax(e, axis=1)) # (2, ?, 4) ?를 안 쓰겠다는 것 => 2 x 4 = 8    # 열 중 큰 값
 print(np.argmax(e, axis=2)) # (2, 3, ?) ?를 안 쓰겠다는 것 => 2 x 3 = 6    # 행 중 큰 값
+
+print('-' * 50)
+
+g = np.arange(24).reshape(2, 3, 4)
+print(g, end='\n\n')
+
+print(g[-1, :, :], end='\n\n')     # g[-1]         # page 중에서 마지막 page
+print(g[:, -1, :], end='\n\n')     # g[:, -1]      # row 중에서 마지막 row
+print(g[:, :, -1], end='\n\n')                     # column 중에서 마지막 column
