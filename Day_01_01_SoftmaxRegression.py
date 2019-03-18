@@ -1,18 +1,13 @@
 # Day_01_01_SoftmaxRegression.py
-
-# 단축키
-# ctrl + / : 주석처리(toggle)
-# ctrl + shift + F10
-# block 지정하지 않고도 ctrl + c, x / ctrl + v
-
-# tensorflow, matplotlib 모듈 설치
-
 import tensorflow as tf
 import numpy as np
 
+#####################
+# Predict Grade Basic
+#####################
 def softmax_regression_1():
-    # feature                     target(Label)
-    # 공부한 시간, 출석한 일수 ==> 성적(A, B, C)
+    #        feature             target(Label)
+    # Study time, Attendace ==> Grades(A, B, C)
     x = [[1, 2],        # C
          [2, 1],
          [4, 5],        # B
@@ -20,53 +15,40 @@ def softmax_regression_1():
          [8, 9],        # C
          [9, 8]]
 
-    # y = [0, 0, 1, 1, 2, 2]
-
-    # x, y의 data shape을 맞춰주기 위해 경우에 따라서 차원을 변경할 수 있다.
-    # y = [[0], [0], [1], [1], [2], [2]]
-    # y = [[0, 0, 1, 1, 2, 2]]
-
-    # 문제
-    # onehot vector로 y를 만드세요
-    y = [[0, 0, 1],
+    # Onehot encoding
+    y = [[0, 0, 1],     # C
          [0, 0, 1],
+         [0, 1, 0],     # B
          [0, 1, 0],
-         [0, 1, 0],
-         [1, 0, 0],
+         [1, 0, 0],     # A
          [1, 0, 0]]
 
     w = tf.Variable(tf.random_uniform([2, 3], dtype=tf.float32))
-
     b = tf.Variable(tf.random_uniform([3], dtype=tf.float32))
 
-    x = np.float32(x)   # Data Type이 맞지 않을 때 최우선 타입은 float32
-    # z = w[0] * x[:,0] + w[1] + x[:,1] + b
+    x = np.float32(x)
 
     # (6, 3) = (6, 2) @ (2, 3)
     z = tf.matmul(x, w) + b
 
-    # 직접 출력할 일은 거의 없다
     hx = tf.nn.softmax(z)
 
     loss_i = tf.nn.softmax_cross_entropy_with_logits_v2(labels=y,
                                                         logits=z)
-    # 평균 내는 함수, reduce - 차원을 줄이겠다는 의미(axis를 쓰면 해당 차원을 줄이겠다)
     loss = tf.reduce_mean(loss_i)
 
-    # learning_rate와 같은 hyperparameter 를 잘 정하는 것이 실력이다.
     optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
-
-    # 연산
     train = optimizer.minimize(loss=loss)
 
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
 
-    for i in range(10):
+    for i in range(1000):
         sess.run(train)
-        # train에 딸린 모든 연산들이 실행된다
         # train = tf.train.GradientDescentOptimizer(learning_rate=0.01).minimize(loss=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y,logits=tf.matmul(x, w))))
-        print(i, sess.run(loss))
+
+        if i % 100 == 0:
+            print(i, sess.run(loss))
 
     preds_z = sess.run(z)
     print(preds_z)
@@ -74,29 +56,29 @@ def softmax_regression_1():
     preds_h = sess.run(hx)
     print(preds_h)
 
-    arg_z = np.argmax(preds_z, axis=1) # 0(수직), 1(수평)
+    arg_z = np.argmax(preds_z, axis=1)      # 0(vertical), 1(horizontal)
     print(arg_z)
 
-    arg_h = np.argmax(preds_h, axis=1) # 0(수직), 1(수평)
+    arg_h = np.argmax(preds_h, axis=1)      # 0(vertical), 1(horizontal)
     print(arg_h)
 
     arg_y = np.argmax(y, axis=1)
     print(arg_y)
 
-    # 문제
-    # 정확도를 알려주세요
-
+    # Print Accuracy
     equals = (arg_z == arg_y)
     print(equals)
     print('acc : ', np.mean(equals))
 
     sess.close()
-# 문제
-# 3시간 공부하고, 6번 출석한 학생과
-# 5시간 공부하고, 8번 출석한 학생의 성적을 알려주세요.
+
+
+#####################
+# Predict Grade - Use Placeholder
+#####################
 def softmax_regression_2():
-    # feature                     target(Label)
-    # 공부한 시간, 출석한 일수 ==> 성적(A, B, C)
+    #        feature             target(Label)
+    # Study time, Attendace ==> Grades(A, B, C)
     x = [[1, 2],        # C
          [2, 1],
          [4, 5],        # B
@@ -104,14 +86,7 @@ def softmax_regression_2():
          [8, 9],        # C
          [9, 8]]
 
-    # y = [0, 0, 1, 1, 2, 2]
-
-    # x, y의 data shape을 맞춰주기 위해 경우에 따라서 차원을 변경할 수 있다.
-    # y = [[0], [0], [1], [1], [2], [2]]
-    # y = [[0, 0, 1, 1, 2, 2]]
-
-    # 문제
-    # onehot vector로 y를 만드세요
+    # Onehot encoding
     y = [[0, 0, 1],
          [0, 0, 1],
          [0, 1, 0],
@@ -119,8 +94,9 @@ def softmax_regression_2():
          [1, 0, 0],
          [1, 0, 0]]
 
-    x = np.float32(x)   # Data Type이 맞지 않을 때 최우선 타입은 float32
+    x = np.float32(x)
 
+    # Add tf.placeholder
     x_p = tf.placeholder(tf.float32)
     y_p = tf.placeholder(tf.float32)
 
@@ -129,18 +105,13 @@ def softmax_regression_2():
 
     z = tf.matmul(x_p, w) + b
 
-    # 직접 출력할 일은 거의 없다
     hx = tf.nn.softmax(z)
 
     loss_i = tf.nn.softmax_cross_entropy_with_logits_v2(labels=y_p,
                                                         logits=z)
-    # 평균 내는 함수, reduce - 차원을 줄이겠다는 의미(axis를 쓰면 해당 차원을 줄이겠다)
     loss = tf.reduce_mean(loss_i)
 
-    # learning_rate와 같은 hyperparameter 를 잘 정하는 것이 실력이다.
     optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
-
-    # 연산
     train = optimizer.minimize(loss=loss)
 
     sess = tf.Session()
@@ -152,8 +123,8 @@ def softmax_regression_2():
         if i % 100 == 0:
             print(i, sess.run(loss, {x_p: x, y_p: y}))
 
-    preds_h = sess.run(hx, {x_p:[[3, 6], [5, 8]]})
-    preds_arg = np.argmax(preds_h, axis=1) # 0(수직), 1(수평)
+    preds_h = sess.run(hx, {x_p:[[3, 6], [5, 8]]})      # Test value
+    preds_arg = np.argmax(preds_h, axis=1)              # 0(vertical), 1(horizontal)
     print('preds_h ::: ', preds_h)
     print('arg_h ::: ', preds_arg)
 
@@ -165,6 +136,9 @@ def softmax_regression_2():
 
     sess.close()
 
+#####################
+# Predict Grade - Use Placeholder
+#####################
 def softmax_regression_3():
     # feature                     target(Label)
     # 공부한 시간, 출석한 일수 ==> 성적(A, B, C)
@@ -176,14 +150,6 @@ def softmax_regression_3():
          [1, 8, 9],        # C
          [1, 9, 8]]
 
-    # y = [0, 0, 1, 1, 2, 2]
-
-    # x, y의 data shape을 맞춰주기 위해 경우에 따라서 차원을 변경할 수 있다.
-    # y = [[0], [0], [1], [1], [2], [2]]
-    # y = [[0, 0, 1, 1, 2, 2]]
-
-    # 문제
-    # onehot vector로 y를 만드세요
     y = [[0, 0, 1],
          [0, 0, 1],
          [0, 1, 0],
@@ -210,10 +176,8 @@ def softmax_regression_3():
 
     loss_i = tf.nn.softmax_cross_entropy_with_logits_v2(labels=y,
                                                         logits=z)
-    # 평균 내는 함수, reduce - 차원을 줄이겠다는 의미(axis를 쓰면 해당 차원을 줄이겠다)
     loss = tf.reduce_mean(loss_i)
 
-    # learning_rate와 같은 hyperparameter 를 잘 정하는 것이 실력이다.
     optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 
     # 연산
@@ -273,11 +237,6 @@ def softmax_regression_4():
     x_p = tf.placeholder(tf.float32)
 
     w = tf.Variable(tf.random_uniform([3, 3], dtype=tf.float32))
-    # b = tf.Variable(tf.random_uniform([3], dtype=tf.float32))
-
-    # z = w[0] * x[:,0] + w[1] + x[:,1] + b
-    # z = w[0] * x[:,0] + w[1] + x[:,1] + w[2] + x[:,2]
-
 
     # (6, 3) = (6, 3) @ (3, 3)
     z = tf.matmul(x_p, w)
@@ -321,6 +280,6 @@ def softmax_regression_4():
     sess.close()
 
 # softmax_regression_1()
-# softmax_regression_2()
+softmax_regression_2()
 # softmax_regression_3()
-softmax_regression_4()
+# softmax_regression_4()
