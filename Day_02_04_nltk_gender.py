@@ -2,6 +2,10 @@
 import nltk
 import random
 
+#####################
+# nltk 라이브러리 활용
+#####################
+# nltk를 사용할 시 딥러닝이 원하는 데이터 형태와 달라서 전처리 과정이 필요
 def get_names():
     # corpus : 말뭉치
     # 영화 댓글, 감정 분석 등
@@ -23,7 +27,6 @@ def get_names():
     print(names[:5])
 
     return names
-    # nltk가 딥러닝이 원하는 모습과 달라서 조금 불편하지만, 전처리가 필요하다
 
 def make_train_test(names, gender_features):
     data = [(gender_features(name), gender) for name, gender in names]
@@ -46,7 +49,7 @@ def gender_identification_1(names):
     acc = nltk.classify.accuracy(clf, test_set)
     print(acc)
 
-    # 어떤 데이터를 틀리는지에 대한 확인 작업이 필수적이다!! 그래야 성장이 있다!!
+    # 어떤 데이터를 틀리는지에 대한 확인 작업은 필수
     clf.show_most_informative_features(5)
 
     return acc
