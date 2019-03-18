@@ -31,12 +31,6 @@ def word_rnn(words, n_iterations=100):
 
     x = np.float32(x)   # Data Type이 맞지 않을 때 최우선 타입은 float32
 
-
-    # 수업시간에는 BasicRNNCell을 사용하지만
-    # 실제로 구현할 때는 GRUCell, LSTMCell 등을 써서 성능을 최적화할 것
-    # 내부로직을 알아야 할 필요가 있는가?
-    # 알면 판단 시에 도움은 될 수 있으나, 가성비가 많이 떨어진다(직접 두 개 다 해보는게 빠름)
-
     # 앞 쪽 레이어
     hidden_size = 7
 
