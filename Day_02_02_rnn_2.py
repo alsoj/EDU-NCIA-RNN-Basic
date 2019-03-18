@@ -2,7 +2,9 @@
 import tensorflow as tf
 import numpy as np
 
-# loss 계산 함수
+################
+# Loss 계산 함수
+################
 def show_sequence_loss():
     def sequence_loss(targets, logits):
         y = tf.constant(targets)
@@ -29,12 +31,12 @@ def show_sequence_loss():
     sequence_loss([[1, 1, 1]], preds1)
     sequence_loss([[0, 0, 0]], preds2)
 
-
     sequence_loss([[2, 2, 2]], [[[0.2, 0.2, 0.6], [0.4, 0.3, 0.3], [0.2, 0.3, 0.5]]])
-
     sequence_loss([[1, 1, 1, 1]], [[[0.2, 0.2, 0.6], [0.4, 0.3, 0.3], [0.2, 0.3, 0.5], [0.2, 0.3, 0.5]]])
 
-# sequence_loss 버전으로 수정
+###########################
+# RNN - sequence_loss 버전 
+###########################
 def rnn_2_1():
     vocab = np.array(['e','n','o','r','s','t'])
 
@@ -59,19 +61,14 @@ def rnn_2_1():
     #      [0, 0, 0, 1, 0, 0]]    # r
 
     y = [0, 1, 4, 2, 3]           # ensor
-
     x = np.float32(x)   # Data Type이 맞지 않을 때 최우선 타입은 float32
-
-
-    # 수업시간에는 BasicRNNCell을 사용하지만
-    # 실제로 구현할 때는 GRUCell, LSTMCell 등을 써서 성능을 최적화할 것
-    # 내부로직을 알아야 할 필요가 있는가?
-    # 알면 판단 시에 도움은 될 수 있으나, 가성비가 많이 떨어진다(직접 두 개 다 해보는게 빠름)
 
     # 앞 쪽 레이어
     hidden_size = 2
 
-    #단어의 개수, 단어의 길이, 유니크한 글자의 개수
+    # batch_size : 단어의 개수
+    # sequence_len : 단어의 길이
+    # n_classes : 유니크한 글자의 개수
     batch_size, sequence_len, n_classes = x.shape
 
     cell = tf.nn.rnn_cell.BasicRNNCell(num_units=hidden_size)
@@ -129,7 +126,6 @@ def rnn_2_1():
             print(i, sess.run(loss), preds_arg, vocab[preds_arg])
             # print(i, sess.run(loss))
 
-
     arg_text = np.argmax(sess.run(z),axis=1)
     print(arg_text)
 
@@ -139,7 +135,9 @@ def rnn_2_1():
 
     sess.close()
 
-# sequence_loss 버전 코드 정리
+###############################
+# RNN - sequence_loss 코드 정리
+###############################
 def rnn_2_2():
     vocab = np.array(['e','n','o','r','s','t'])
 
@@ -157,21 +155,9 @@ def rnn_2_2():
           [0, 0, 0, 0, 1, 0],    # s
           [0, 0, 1, 0, 0, 0]]]   # o
 
-    # y = [[1, 0, 0, 0, 0, 0],    # e
-    #      [0, 1, 0, 0, 0, 0],    # n
-    #      [0, 0, 0, 0, 1, 0],    # s
-    #      [0, 0, 1, 0, 0, 0],    # o
-    #      [0, 0, 0, 1, 0, 0]]    # r
-
     y = [[0, 1, 4, 2, 3]]           # ensor
 
     x = np.float32(x)   # Data Type이 맞지 않을 때 최우선 타입은 float32
-
-
-    # 수업시간에는 BasicRNNCell을 사용하지만
-    # 실제로 구현할 때는 GRUCell, LSTMCell 등을 써서 성능을 최적화할 것
-    # 내부로직을 알아야 할 필요가 있는가?
-    # 알면 판단 시에 도움은 될 수 있으나, 가성비가 많이 떨어진다(직접 두 개 다 해보는게 빠름)
 
     # 앞 쪽 레이어
     hidden_size = 2
@@ -207,7 +193,6 @@ def rnn_2_2():
 
     # ---------------------------------------------------------- #
 
-
     # sparse & dense
     # sparse array  : 0으로 채워진 데이터에 1로 유의미한 데이터 => 위치만 표시한 것 [0, 1, 4, 2, 3]
     # dense는 반대의 개념
@@ -241,7 +226,6 @@ def rnn_2_2():
             # print(i, sess.run(loss))
 
     sess.close()
-
 
 # show_sequence_loss()
 
