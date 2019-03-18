@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 from sklearn import preprocessing
 
+# 문제
 # words가 여러 개의 문자열일 때 동작하도록 수정하세요
 # (1, 5, 6) => (3, 5, 6)
 def make_onehot(words):
@@ -34,18 +35,6 @@ def make_onehot(words):
 
 def rnn_4(words, n_iterations=100):
     x, y, vocab = make_onehot(words)
-
-    print('x ::: ', x)
-    print('y ::: ', y)
-    print('vocab ::: ', vocab)
-
-    # x = np.float32(x)   # Data Type이 맞지 않을 때 최우선 타입은 float32
-
-
-    # 수업시간에는 BasicRNNCell을 사용하지만
-    # 실제로 구현할 때는 GRUCell, LSTMCell 등을 써서 성능을 최적화할 것
-    # 내부로직을 알아야 할 필요가 있는가?
-    # 알면 판단 시에 도움은 될 수 있으나, 가성비가 많이 떨어진다(직접 두 개 다 해보는게 빠름)
 
     # 앞 쪽 레이어
     hidden_size = 7
@@ -90,7 +79,7 @@ def rnn_4(words, n_iterations=100):
         sess.run(train)
 
         preds = sess.run(z)
-        preds_arg = np.argmax(preds, axis=2) # 여기도 수정!!
+        preds_arg = np.argmax(preds, axis=2)
 
         if i % 100 == 0:
             print(i, sess.run(loss))
@@ -98,10 +87,7 @@ def rnn_4(words, n_iterations=100):
             # print(vocab[preds_arg])
             print([''.join(s) for s in vocab[preds_arg]])
 
-
-
     sess.close()
-
 
 rnn_4(['tensor', 'coffee', 'yellow'], 1000)
 # rnn_4('tensor', 1000)
