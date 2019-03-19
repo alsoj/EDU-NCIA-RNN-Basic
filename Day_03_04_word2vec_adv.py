@@ -12,8 +12,17 @@ def extract(token_count, target, window_size, tokens):
 
 def make_vocab_and_dict(corpus, stop_words):
     corpus_by_word = [[word for word in sent.split() if word not in stop_words] for sent in corpus]
-    print(corpus_by_word)
-
+    print(corpus_by_word) # [['king', 'strong', 'man'], 
+                          #  ['queen', 'wise', 'woman'],
+                          #  ['boy', 'young', 'man'],
+                          #  ['girl', 'young', 'woman'], 
+                          #  ['prince', 'young', 'king'],
+                          #  ['princess', 'young', 'queen'], 
+                          #  ['man', 'strong'], 
+                          #  ['woman', 'pretty'], 
+                          #  ['prince', 'boy', 'king'],
+                          #  ['princess', 'girl', 'queen']]
+    
     print([sent for sent in corpus])
     print([word for word in 'king is a strong man'.split() if word not in stop_words])
 
