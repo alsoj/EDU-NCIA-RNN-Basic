@@ -23,8 +23,8 @@ def make_vocab_and_dict(corpus, stop_words):
                           #  ['prince', 'boy', 'king'],
                           #  ['princess', 'girl', 'queen']]
     
-    print([sent for sent in corpus])
-    print([word for word in 'king is a strong man'.split() if word not in stop_words])
+#     print([sent for sent in corpus])
+#     print([word for word in 'king is a strong man'.split() if word not in stop_words])
 
     vocab = sorted({word for sent in corpus_by_word for word in sent})
     print(vocab)
@@ -51,8 +51,8 @@ def build_dataset(corpus_idx, n_classes, window_size, is_skipgram):
                 xx.append(ctx)
                 yy.append(target)
 
-    print('xx ::: ', xx[:3])
-    print('yy ::: ', yy[:3])
+#     print('xx ::: ', xx[:3])
+#     print('yy ::: ', yy[:3])
 
     return make_onehot(xx, yy, n_classes, is_skipgram)
 
@@ -69,7 +69,7 @@ def make_onehot(xx, yy, n_classes, is_skipgram):
             z = [[int(pos == j) for j in range(n_classes)] for pos in input]
             x[i] = np.mean(z, axis=0)
 
-    print(x[:3])
+#     print(x[:3])
 
     return x, y
 
@@ -101,7 +101,7 @@ def show_word2vec(vocab, corpus_idx, window_size, is_skipgram):
     for i in range(100000):
         sess.run(train)
 
-        if i % 100 == 0:
+        if i % 1000 == 0:
             print(i, sess.run(loss))
     
     # w_hidden을 더 많이 쓴다? w_output 보다? 더 정확해서
@@ -126,10 +126,12 @@ def show_similarity(vectors, vocab, title):
     plt.title(title)
     plt.show()
 
+#########################
+# gensim 활용한 Word2Vec
+#########################
 def show_word2vec_from_gensim(corpus, vocab, stop_words, is_skipgram):
     corpus_by_word = [[word for word in sent.split() if word not in stop_words] for sent in corpus]
     print(corpus_by_word)
-
 
     vectors = gensim.models.Word2Vec(corpus_by_word,
                                      size=2,            # feature의 개수
@@ -146,7 +148,6 @@ def show_word2vec_from_gensim(corpus, vocab, stop_words, is_skipgram):
 
     show_similarity(vectors.wv.vectors, vocab, 'skip-gram' if is_skipgram else 'cbow')
 
-
 corpus = ['king is a strong man',
           'queen is a wise woman',
           'boy is a young man',
@@ -160,12 +161,10 @@ corpus = ['king is a strong man',
 
 vocab, corpus_idx = make_vocab_and_dict(corpus, ['is', 'a', 'will', 'be'])       # 불용어(사용하지 않는 단어들)
 
-# show_word2vec(vocab, corpus_idx, window_size=1, is_skipgram=True)
+show_word2vec(vocab, corpus_idx, window_size=1, is_skipgram=True)
 # show_word2vec(vocab, corpus_idx, window_size=1, is_skipgram=False)
 
-show_word2vec_from_gensim(corpus, vocab, ['is','a','will','be'], is_skipgram=True)
-
-
+# show_word2vec_from_gensim(corpus, vocab, ['is','a','will','be'], is_skipgram=True)
 
 # 아래와 같은 데이터를 Look up table 이라고 부른다.
 # [[ 3.3446867  -5.41735   ]
